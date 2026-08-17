@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Profile</title>
+</head>
+<body>
+
+<h1>Edit Profile</h1>
+
+<form method="POST">
+
+    <label>New Name</label><br>
+    <input type="text" name="name"><br><br>
+
+    <button type="submit">Update Name</button>
+
+</form>
+
+<a href="{{ url_for('user.profile') }}">Back to Profile</a>
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+{% with messages = get_flashed_messages() %}
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <p>{{ message }}</p>
+
+        {% endfor %}
+
+    {% endif %}
+
+{% endwith %}
+
+    <h1>Welcome {{ name }}</h1>
+
+<a href="{{ url_for('user.profile') }}">Profile</a><br><br>
+<a href="{{ url_for('auth.logout') }}">Logout</a><br><br>
+<a href="{{ url_for('user.edit_profile') }}">Edit Profile</a>
+
+</body>
+</html>
