@@ -79,8 +79,8 @@ def register():
             return redirect(url_for("auth.register"))
 
         cursor.execute(
-            "INSERT INTO users(name,email, password) VALUES(?, ?, ?)",
-            (name,email, hashed_password)
+            "INSERT INTO users(name,email, password, role) VALUES(?, ?, ?, ?)",
+            (name,email, hashed_password, "user")
         )
 
         conn.commit()
