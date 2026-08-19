@@ -1,13 +1,14 @@
 from flask import Blueprint, request, render_template, redirect, url_for, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from database.database import get_db_connection
+import re
 
 auth_bp = Blueprint("auth", __name__)
 
 @auth_bp.route("/login", methods=["POST"])
 def login():
-    email=request.form['email']
-    password=request.form['password']
+    email=request.form.get('email', '').strip().lower()
+    password=request.form.get('password','')
 
     if not email:
         flash("Email is required")
@@ -25,7 +26,6 @@ def login():
     )
 
     user = cursor.fetchone()
-    print(user)
     conn.close()
 
     if user:
@@ -42,19 +42,47 @@ def login():
 def register():
     if request.method == "POST":
         name=request.form['name']
-        email = request.form['email']
+        email = request.form['email'].strip().lower()
         password = request.form['password']
         confirm_password = request.form['confirm_password']
 
         if not name:
             flash("Name is required")
             return render_template("register.html")
+        if not re.match(r"^[A-Za-z ]+$", name):
+            flash("Name can contain only letters and spaces")
+            return render_template("register.html")
+
         if not email:
             flash("Email is required")
             return render_template("register.html")
+        if not re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", email):
+            flash("Please enter a valid email")
+            return render_template("register.html")
+
         if not password:
             flash("password is required")
             return render_template("register.html")
+        if len(password) < 8:
+            flash("Password must be at least 8 characters")
+            return render_template("register.html")
+
+        if not re.search(r"[A-Z]", password):
+            flash("Password must contain at least one uppercase letter")
+            return render_template("register.html")
+
+        if not re.search(r"[a-z]", password):
+            flash("Password must contain at least one lowercase letter")
+            return render_template("register.html")
+
+        if not re.search(r"[0-9]", password):
+            flash("Password must contain at least one number")
+            return render_template("register.html")
+
+        if not re.search(r"[^A-Za-z0-9]", password):
+            flash("Password must contain at least one special character")
+            return render_template("register.html")
+
         if not confirm_password:
             flash("confirm password is required")
             return render_template("register.html")

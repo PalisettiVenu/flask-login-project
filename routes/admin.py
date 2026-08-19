@@ -1,10 +1,11 @@
 from flask import Blueprint, redirect, url_for, flash, session, render_template
 from database.database import get_db_connection
-from routes.decorators import admin_required
+from routes.decorators import admin_required, login_required
 
 admin_bp = Blueprint("admin", __name__)
 
 @admin_bp.route("/admin")
+@login_required
 @admin_required
 def admin_dashboard():
     user = session["user"]
@@ -22,6 +23,7 @@ def admin_dashboard():
     return render_template("admin.html", users=users)
 
 @admin_bp.route("/admin/users/<int:user_id>/make-admin", methods=["POST"])
+@login_required
 @admin_required
 def make_admin(user_id):
 
@@ -39,6 +41,7 @@ def make_admin(user_id):
     return redirect(url_for("admin.admin_dashboard"))
 
 @admin_bp.route("/admin/users/<int:user_id>/make-user", methods=["POST"])
+@login_required
 @admin_required
 def make_user(user_id):
 
@@ -71,6 +74,7 @@ def make_user(user_id):
     return redirect(url_for("admin.admin_dashboard"))
 
 @admin_bp.route("/admin/users/<int:user_id>/delete", methods=["POST"])
+@login_required
 @admin_required
 def delete_user(user_id):
 

@@ -5,9 +5,6 @@ from database.database import get_db_connection
 def admin_required(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        if "user" not in session:
-            flash("Please login first")
-            return redirect(url_for("home"))
 
         user = session["user"]
 
@@ -25,6 +22,17 @@ def admin_required(func):
         if not result or result[0] != "admin":
             flash("Access denied")
             return redirect(url_for("dashboard"))
+
+        return func(*args, **kwargs)
+
+    return wrapper
+
+def login_required(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if "user" not in session:
+            flash("Please login first")
+            return redirect(url_for("home"))
 
         return func(*args, **kwargs)
 
