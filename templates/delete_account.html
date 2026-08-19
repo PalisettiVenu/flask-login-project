@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Account</title>
+</head>
+<body>
+
+<h1>Delete Account</h1>
+
+<p>Enter your password to permanently delete your account.</p>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<form action="{{ url_for('user.delete_account') }}" method="POST">
+
+    <label>Password</label>
+    <input type="password" name="password">
+
+    <br><br>
+
+    <label>
+    <input type="checkbox" name="confirm_delete">
+    I understand that my account will be permanently deleted.
+    </label>
+
+<br><br>
+
+    <button type="submit">Delete My Account</button>
+
+</form>
+
+<br>
+
+<a href="{{ url_for('user.profile') }}">Cancel</a>
+
+</body>
+</html>
