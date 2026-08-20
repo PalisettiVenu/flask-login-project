@@ -1,4 +1,4 @@
-from flask import Flask,redirect,flash,render_template,session,url_for,abort
+from flask import Flask,redirect,flash,render_template,session,url_for,abort, request,jsonify
 from database.database import create_db,get_db_connection
 from routes.auth import auth_bp
 from routes.user import user_bp
@@ -53,6 +53,29 @@ def forbidden(error):
 def internal_server_error(error):
     return render_template("500.html"), 500
 
+@app.route("/api/test", methods=["POST"])
+def api_test():
+    data = request.json
+
+    name = data.get("name")
+    email = data.get("email")
+
+    if not email:
+        return jsonify({
+            "error": "Email is required"
+        }), 400
+
+    return jsonify({
+        "name": name,
+        "email": email
+    }), 200
+
+@app.route("/api/health", methods=["GET"])
+def health():
+    return jsonify({
+        "status": "ok",
+        "message": "Flask API is running"
+    })
 create_db()
 
 
